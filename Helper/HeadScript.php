@@ -115,7 +115,7 @@ class HeadScript extends Placeholder\Container\AbstractStandalone
      * @param  string $type      Script type and/or array of script attributes
      * @return HeadScript
      */
-    public function __invoke($mode = HeadScript::FILE, $spec = null, $placement = 'APPEND', array $attrs = array(), $type = 'text/javascript')
+    public function __invoke($mode = self::FILE, $spec = null, $placement = 'APPEND', array $attrs = array(), $type = 'text/javascript')
     {
         if ((null !== $spec) && is_string($spec)) {
             $action    = ucfirst(strtolower($mode));
@@ -408,6 +408,10 @@ class HeadScript extends Placeholder\Container\AbstractStandalone
             && !empty($item->attributes['conditional'])
             && is_string($item->attributes['conditional']))
         {
+            // inner wrap with comment end and start if !IE
+            if (str_replace(' ', '', $item->attributes['conditional']) === '!IE') {
+                $html = '<!-->' . $html . '<!--';
+            }
             $html = $indent . '<!--[if ' . $item->attributes['conditional'] . ']>' . $html . '<![endif]-->';
         } else {
             $html = $indent . $html;
