@@ -31,7 +31,6 @@ class FlashMessenger extends AbstractTranslatorHelper implements ServiceLocatorA
         PluginFlashMessenger::NAMESPACE_ERROR => 'error',
         PluginFlashMessenger::NAMESPACE_SUCCESS => 'success',
         PluginFlashMessenger::NAMESPACE_DEFAULT => 'default',
-        PluginFlashMessenger::NAMESPACE_WARNING => 'warning',
     );
 
     /**
@@ -107,8 +106,11 @@ class FlashMessenger extends AbstractTranslatorHelper implements ServiceLocatorA
 
         // Prepare classes for opening tag
         if (empty($classes)) {
-            $classes = isset($this->classMessages[$namespace]) ?
-                $this->classMessages[$namespace] : $this->classMessages[PluginFlashMessenger::NAMESPACE_DEFAULT];
+            if (isset($this->classMessages[$namespace])) {
+                $classes = $this->classMessages[$namespace];
+            } else {
+                $classes = $this->classMessages[PluginFlashMessenger::NAMESPACE_DEFAULT];
+            }
             $classes = array($classes);
         }
 
@@ -122,7 +124,8 @@ class FlashMessenger extends AbstractTranslatorHelper implements ServiceLocatorA
         array_walk_recursive($messages, function($item) use (&$messagesToPrint, $escapeHtml, $translator, $translatorTextDomain) {
             if ($translator !== null) {
                 $item = $translator->translate(
-                        $item, $translatorTextDomain
+                    $item,
+                    $translatorTextDomain
                 );
             }
             $messagesToPrint[] = $escapeHtml($item);
