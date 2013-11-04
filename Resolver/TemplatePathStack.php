@@ -152,7 +152,7 @@ class TemplatePathStack implements ResolverInterface
     }
 
     /**
-     * Rest the path stack to the paths provided
+     * Reset the path stack to the paths provided
      *
      * @param  SplStack|array $paths
      * @return TemplatePathStack
